@@ -1,0 +1,26 @@
+name: hiddify-sales-bot-v1
+services:
+  bot:
+    build: .
+    env_file: .env
+    volumes:
+      - bot-data:/app/data
+    restart: unless-stopped
+    init: true
+    mem_limit: 192m
+    cpus: 0.50
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.health"]
+      interval: 60s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+volumes:
+  bot-data:
